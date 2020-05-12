@@ -8,14 +8,14 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 
-const jsFiles = glob.sync(path.join(SRC_PATH, '/**/*.js'))
+const jsFiles = glob.sync(path.join(SRC_PATH, '/pages/*/index.js'))
 const entryFiles = {}
 jsFiles.forEach(file => {
     // var subkey = file.match(/src\/(\S*)\.js/)[1]
-    var subkey = path.basename(file, '.js')
+    var subkey = file.split('/').splice(-2,1)
     entryFiles[subkey] = file
 })
-const htmlFiles = glob.sync(path.join(SRC_PATH, '/pages/**/*.html'))
+const htmlFiles = glob.sync(path.join(SRC_PATH, '/pages/*/*.html'))
 //插件数组
 let plugins = htmlFiles.map(file => {
     // var subkey = file.match(/src\/(\S*)\.js/)[1]
@@ -28,7 +28,7 @@ let plugins = htmlFiles.map(file => {
         inject: true,    //打包后script标签位置 body（body底部） head（head里） true(默认值，html底部)
         hash: true,      //js文件是否添加hash字符串
         minify: false,    //html是否压缩
-        chunks: [name, 'vender'],
+        chunks: [name, 'vendors','common'],
     })
 })
 console.log(process.env.NODE_ENV)
@@ -61,8 +61,7 @@ module.exports = {
     // 模块解析
     module: {
         rules: [
-            { test: /\.m?js$/, loader: 'babel-loader', exclude: /node_modules/ },
-            { test: /\.jsx$/, loader: 'babel-loader', exclude: /node_modules/ },
+            { test: /\.m?jsx?$/, loader: 'babel-loader', exclude: /node_modules/ },
             {
                 test: /\.vue$/,
                 use: 'vue-loader'

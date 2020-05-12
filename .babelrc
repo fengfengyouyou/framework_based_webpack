@@ -1,3 +1,41 @@
+// corejs@3升级的两种方案
+// polyfill是在你的source code 前运行的，所以安装的时候是 --save
+// 1.polyfill 垫片方案（根据 useBuiltIns 配置参数不同，既可以按需加载，也可以不按需）的升级策略：
+// @babel/polyfill不必再安装，转而需要依靠core-js和regenerator-runtime（详细原因请看作者的阐述），替代方案用法如下：
+
+// 安装依赖
+// npm i -D babel-loader @babel/core @babel/preset-env
+// npm i -S core-js regenerator-runtime
+
+// {
+//   "presets": [
+//     "@babel/preset-react",
+//     "@babel/preset-typescript",
+//     [
+//       "@babel/preset-env",
+//       {
+//         "targets": {
+//           "chrome": "50",
+//           "ie": "8"
+//         },
+//         "modules": false,
+//         "useBuiltIns": "usage",
+//         "corejs": {
+//           "version": 3, // 使用core-js@3
+//           "proposals": true,
+//         }
+//       }
+//     ]
+//   ]
+// }
+
+
+// 2.transform-runtime 按需加载方案 的升级策略：
+
+// 安装依赖
+
+// npm i -D babel-loader @babel/core @babel/preset-env @babel/plugin-transform-runtime
+// npm i -S @babel/runtime-corejs3
 {
   "presets": [
     "@babel/preset-react",
@@ -5,22 +43,20 @@
     [
       "@babel/preset-env",
       {
-        "targets": {
-          "chrome": "50",
-          "ie": "8"
+        "modules": false
+      }
+    ]
+  ],
+  "plugins": [
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "corejs": {
+          "version": 3,
+          "proposals": true
         },
-        "modules":false,
-        "useBuiltIns": "usage",
-        "corejs": 2
+        "useESModules": true
       }
     ]
   ]
-  // "plugins": [
-  //   [
-  //     "@babel/plugin-transform-runtime",
-  //     {
-  //       "corejs": 2
-  //     }
-  //   ]
-  // ]
 }

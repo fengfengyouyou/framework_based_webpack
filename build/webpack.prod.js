@@ -29,17 +29,33 @@ const prodConfig = merge(baseConfig, {
     ],
     optimization: {
         splitChunks: {
+            chunks: 'all',
+            minSize: 30000,
+            minChunks: 1,
+            maxAsyncRequests: 5,
+            maxInitialRequests: 3,
+            name: true,
             cacheGroups: {
-                fooStyles: {
-                    name: 'foo',
-                    test: (m, c, entry = 'foo') => m.constructor.name === 'CssModule' && recursiveIssuer(m) === entry,
+                common: {
+                    // name: "common",  // 指定公共模块 bundle 的名称
                     chunks: 'all',
-                    enforce: true
+                    minSize: 0, //大于0个字节,默认值30000，过小没有必要打包，优化不大
+                    minChunks: 2, //抽离公共代码时，这个代码块最小被引用的次数
+                    priority: -20,
                 },
-                barStyles: {
-                    name: 'bar',
-                    test: (m, c, entry = 'bar') => m.constructor.name === 'CssModule' && recursiveIssuer(m) === entry,
+                // 第三方库抽离
+                vendors: {
                     chunks: 'all',
+                    priority: -10, //权重
+                    test: /node_modules/
+                },
+                // 主要是针对多入口，会产生多分样式文件，合并成一个样式文件，减少加载次数 配置如下
+                styles: {
+                    name: 'styles',
+                    test: /\.(scss|css|less)$/,
+                    chunks: 'all',
+                    minChunks: 1,
+                    reuseExistingChunk: true,
                     enforce: true
                 }
             }
