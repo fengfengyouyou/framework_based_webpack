@@ -40,7 +40,7 @@
   "presets": [
     "@babel/preset-react",
     "@babel/preset-typescript",
-    "@babel/stage-0",
+    // "stage-0",
     [
       "@babel/preset-env",
       {
@@ -58,6 +58,7 @@
         },
         "useESModules": true
       }
-    ]
+    ],
+    "@babel/proposal-class-properties"
   ]
 }
