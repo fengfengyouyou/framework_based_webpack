@@ -29,8 +29,11 @@ const devConfig = merge(baseConfig, {
         inline: true,
         useLocalIp: true,
         quiet: true, // necessary for FriendlyErrorsPlugin
+        overlay: { warnings: false, errors: true }, // 编译出现错误时，将错误直接显示在页面上
+        stats: 'errors-only'
     }
 })
+// module.exports = devConfig
 module.exports = new Promise((resolve, reject) => {
     portfinder.basePort = process.env.PORT || devConfig.devServer.port
     portfinder.getPort((err, port) => {

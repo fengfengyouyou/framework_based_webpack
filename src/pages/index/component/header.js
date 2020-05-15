@@ -1,8 +1,18 @@
 import { Row, Col } from 'antd';
 
 import React, { Component } from 'react'
-
-export default class header extends Component {
+import withA from './hightCom.jsx'
+class header extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      aaa:111
+    }
+  }
+  aaa(){
+    console.log(13132)
+  }
+  becomeOnBlur = e => {}
   render() {
     return (
       <div>
@@ -28,3 +38,7 @@ export default class header extends Component {
     )
   }
 }
+//  const Header = React.forwardRef((props, ref) => (
+//   <header></header>
+// ))
+export default withA(header, () => ({ aaa: 123 }))
